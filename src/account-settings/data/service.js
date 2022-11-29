@@ -79,6 +79,12 @@ export async function getAccount(username) {
   return unpackAccountResponseData(data);
 }
 
+export async function getCustomProfile() {
+  const { data } = await getAuthenticatedHttpClient()
+    .get(`${getConfig().LMS_BASE_URL}/lekt/api/me`);
+  return data;
+}
+
 export async function patchAccount(username, commitValues) {
   const requestConfig = {
     headers: { 'Content-Type': 'application/merge-patch+json' },
@@ -219,6 +225,7 @@ export async function postVerifiedName(data) {
 export async function getSettings(username, userRoles, userId) {
   const [
     account,
+    customProfile,
     preferences,
     thirdPartyAuthProviders,
     profileDataManager,
@@ -229,6 +236,7 @@ export async function getSettings(username, userRoles, userId) {
     demographicsOptions,
   ] = await Promise.all([
     getAccount(username),
+    getCustomProfile(),
     getPreferences(username),
     getThirdPartyAuthProviders(),
     getProfileDataManager(username, userRoles),
@@ -241,6 +249,7 @@ export async function getSettings(username, userRoles, userId) {
 
   return {
     ...account,
+    customProfile,
     ...preferences,
     thirdPartyAuthProviders,
     profileDataManager,

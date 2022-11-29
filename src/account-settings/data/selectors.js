@@ -177,6 +177,22 @@ const formValuesSelector = createSelector(
   },
 );
 
+const formCustomProfile = createSelector(
+  valuesSelector,
+  draftsSelector,
+  (values, drafts) => {
+    const formValues = {};
+    Object.entries(values).forEach(([name, value]) => {
+      if (typeof value === 'boolean') {
+        formValues[name] = chooseFormValue(drafts[name], value);
+      } else {
+        formValues[name] = chooseFormValue(drafts[name], value) || '';
+      }
+    });
+    return formValues;
+  },
+);
+
 const transformTimeZonesToOptions = timeZoneArr => timeZoneArr
   .map(({ time_zone, description }) => ({ // eslint-disable-line camelcase
     value: time_zone, label: description, // eslint-disable-line camelcase
@@ -216,6 +232,7 @@ export const accountSettingsPageSelector = createSelector(
   siteLanguageOptionsSelector,
   siteLanguageSelector,
   formValuesSelector,
+  formCustomProfile,
   valuesSelector,
   draftsSelector,
   errorSelector,
@@ -233,6 +250,7 @@ export const accountSettingsPageSelector = createSelector(
     siteLanguageOptions,
     siteLanguage,
     formValues,
+    formCustomProfile,
     committedValues,
     drafts,
     formErrors,
