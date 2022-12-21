@@ -53,7 +53,7 @@ export function* handleFetchSettings() {
     const { username, userId, roles: userRoles } = getAuthenticatedUser();
 
     const {
-      thirdPartyAuthProviders, profileDataManager, timeZones, ...values
+      customProfile, thirdPartyAuthProviders, profileDataManager, timeZones, ...values
     } = yield call(
       getSettings,
       username,
@@ -67,6 +67,7 @@ export function* handleFetchSettings() {
 
     yield put(fetchSettingsSuccess({
       values,
+      customProfile,
       thirdPartyAuthProviders,
       profileDataManager,
       timeZones,

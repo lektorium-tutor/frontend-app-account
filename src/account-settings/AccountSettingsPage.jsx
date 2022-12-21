@@ -69,6 +69,7 @@ class AccountSettingsPage extends React.Component {
 
     this.navLinkRefs = {
       '#basic-information': React.createRef(),
+      '#profile-educont': React.createRef(),
       '#profile-information': React.createRef(),
       '#demographics-information': React.createRef(),
       '#social-media': React.createRef(),
@@ -454,6 +455,74 @@ class AccountSettingsPage extends React.Component {
     return null;
   }
 
+  renderRoleCustomProfile(){
+    if(this.props.formCustomProfile.role === "STUDENT"){
+      return (
+        <>
+          <div className="d-flex align-items-start">
+            <h6 aria-level="3">Роль</h6>
+          </div>
+          <p data-hj-suppress>Обучающийся</p>
+        </>
+      )
+    }
+    else {
+      return (
+        <>
+          <div className="d-flex align-items-start">
+            <h6 aria-level="3">Роль</h6>
+          </div>
+          <p data-hj-suppress>Преподаватель</p>
+        </>
+      )
+    }
+  }
+
+  renderEduInfoCustomProfile() {
+    if (this.props.formCustomProfile.educationalInstitutions.educationalInstitution) {
+      return (
+        <>
+          <div className="d-flex align-items-start">
+            <h6 aria-level="3">информация образовательной организации</h6>
+          </div>
+          <label className='small text-muted'>Полное название: </label>
+          <p data-hj-suppress className='small'>{this.props.formCustomProfile.educationalInstitutions.educationalInstitution.fullName}</p>
+          <label className='small text-muted'>Название образовательного учреждения: </label> 
+          <p data-hj-suppress className='small'>{this.props.formCustomProfile.educationalInstitutions.educationalInstitution.schoolName}</p>
+          <label className='small text-muted'>Адрес: </label>
+          <p data-hj-suppress className='small'> {this.props.formCustomProfile.educationalInstitutions.educationalInstitution.address}</p>
+        </>
+      )
+    }
+  }
+
+  renderCustomProfile() {
+    console.log(this.props.formCustomProfile)
+    if (!this.props.formCustomProfile) {
+      return null;
+    }
+    return (
+      <>
+        <div className="account-section pt-3 mb-5" id="profile-educont" ref={this.navLinkRefs['#profile-educont']}>
+          <h2 className="section-heading h4 mb-3">
+            информация профиля Educont
+          </h2>
+          <div className="d-flex align-items-start">
+            <h6 aria-level="3">ФИО</h6>
+          </div>
+          <p data-hj-suppress>{this.props.formCustomProfile.fullName}</p>
+          <div className="d-flex align-items-start">
+            <h6 aria-level="3">email</h6>
+          </div>
+          <p data-hj-suppress>{this.props.formCustomProfile.email}</p>
+          {this.renderRoleCustomProfile()}
+          {this.renderEduInfoCustomProfile()}
+
+        </div>
+      </>
+    )
+  }
+
   renderContent() {
     const editableFieldProps = {
       onChange: this.handleEditableFieldChange,
@@ -492,11 +561,11 @@ class AccountSettingsPage extends React.Component {
     );
     return (
       <>
-        { shouldUpdateDOB
+        {shouldUpdateDOB
           && (
-          <DOBModal
-            {...editableFieldProps}
-          />
+            <DOBModal
+              {...editableFieldProps}
+            />
           )}
         <div className="account-section pt-3 mb-5" id="basic-information" ref={this.navLinkRefs['#basic-information']}>
           {
@@ -505,13 +574,13 @@ class AccountSettingsPage extends React.Component {
           }
           {localStorage.getItem('submittedDOB')
             && (
-            <OneTimeDismissibleAlert
-              id="updated-dob"
-              variant="success"
-              icon={CheckCircle}
-              header={this.props.intl.formatMessage(messages['account.settings.field.dob.form.success'])}
-              body=""
-            />
+              <OneTimeDismissibleAlert
+                id="updated-dob"
+                variant="success"
+                icon={CheckCircle}
+                header={this.props.intl.formatMessage(messages['account.settings.field.dob.form.success'])}
+                body=""
+              />
             )}
 
           <h2 className="section-heading h4 mb-3">
@@ -539,10 +608,10 @@ class AccountSettingsPage extends React.Component {
             type="text"
             value={
               verifiedName?.status === 'submitted'
-              && this.props.formValues.pending_name_change
+                && this.props.formValues.pending_name_change
                 ? this.props.formValues.pending_name_change
                 : this.props.formValues.name
-              }
+            }
             label={this.props.intl.formatMessage(messages['account.settings.field.full.name'])}
             emptyLabel={
               this.isEditable('name')
@@ -567,26 +636,26 @@ class AccountSettingsPage extends React.Component {
           />
           {verifiedName
             && (
-            <EditableField
-              name="verified_name"
-              type="text"
-              value={this.props.formValues.verified_name}
-              label={
-                (
-                  <div className="d-flex">
-                    {this.props.intl.formatMessage(messages['account.settings.field.name.verified'])}
-                    {
-                      this.renderVerifiedNameIcon(verifiedName.status)
-                    }
-                  </div>
-                )
-              }
-              helpText={this.renderVerifiedNameHelpText(verifiedName.status, verifiedName.proctored_exam_attempt_id)}
-              isEditable={this.isEditable('verifiedName')}
-              isGrayedOut={!this.isEditable('verifiedName')}
-              onChange={this.handleEditableFieldChange}
-              onSubmit={this.handleSubmitVerifiedName}
-            />
+              <EditableField
+                name="verified_name"
+                type="text"
+                value={this.props.formValues.verified_name}
+                label={
+                  (
+                    <div className="d-flex">
+                      {this.props.intl.formatMessage(messages['account.settings.field.name.verified'])}
+                      {
+                        this.renderVerifiedNameIcon(verifiedName.status)
+                      }
+                    </div>
+                  )
+                }
+                helpText={this.renderVerifiedNameHelpText(verifiedName.status, verifiedName.proctored_exam_attempt_id)}
+                isEditable={this.isEditable('verifiedName')}
+                isGrayedOut={!this.isEditable('verifiedName')}
+                onChange={this.handleEditableFieldChange}
+                onSubmit={this.handleSubmitVerifiedName}
+              />
             )}
 
           <EmailField
@@ -610,15 +679,15 @@ class AccountSettingsPage extends React.Component {
           <ResetPassword email={this.props.formValues.email} />
           {(!getConfig().ENABLE_COPPA_COMPLIANCE)
             && (
-            <EditableSelectField
-              name="year_of_birth"
-              type="select"
-              label={this.props.intl.formatMessage(messages['account.settings.field.dob'])}
-              emptyLabel={this.props.intl.formatMessage(messages['account.settings.field.dob.empty'])}
-              value={this.props.formValues.year_of_birth}
-              options={yearOfBirthOptions}
-              {...editableFieldProps}
-            />
+              <EditableSelectField
+                name="year_of_birth"
+                type="select"
+                label={this.props.intl.formatMessage(messages['account.settings.field.dob'])}
+                emptyLabel={this.props.intl.formatMessage(messages['account.settings.field.dob.empty'])}
+                value={this.props.formValues.year_of_birth}
+                options={yearOfBirthOptions}
+                {...editableFieldProps}
+              />
             )}
           <EditableSelectField
             name="country"
@@ -636,23 +705,23 @@ class AccountSettingsPage extends React.Component {
           />
           {showState
             && (
-            <EditableSelectField
-              name="state"
-              type="select"
-              value={this.props.formValues.state}
-              options={stateOptions}
-              label={this.props.intl.formatMessage(messages['account.settings.field.state'])}
-              emptyLabel={
-                this.isEditable('state')
-                  ? this.props.intl.formatMessage(messages['account.settings.field.state.empty'])
-                  : this.renderEmptyStaticFieldMessage()
-              }
-              isEditable={this.isEditable('state')}
-              {...editableFieldProps}
-            />
+              <EditableSelectField
+                name="state"
+                type="select"
+                value={this.props.formValues.state}
+                options={stateOptions}
+                label={this.props.intl.formatMessage(messages['account.settings.field.state'])}
+                emptyLabel={
+                  this.isEditable('state')
+                    ? this.props.intl.formatMessage(messages['account.settings.field.state.empty'])
+                    : this.renderEmptyStaticFieldMessage()
+                }
+                isEditable={this.isEditable('state')}
+                {...editableFieldProps}
+              />
             )}
         </div>
-
+        {this.renderCustomProfile()}
         <div className="account-section pt-3 mb-5" id="profile-information" ref={this.navLinkRefs['#profile-information']}>
           <h2 className="section-heading h4 mb-3">
             {this.props.intl.formatMessage(messages['account.settings.section.profile.information'])}
@@ -690,11 +759,11 @@ class AccountSettingsPage extends React.Component {
           {getConfig().COACHING_ENABLED
             && this.props.formValues.coaching.eligible_for_coaching
             && (
-            <CoachingToggle
-              name="coaching"
-              phone_number={this.props.formValues.phone_number}
-              coaching={this.props.formValues.coaching}
-            />
+              <CoachingToggle
+                name="coaching"
+                phone_number={this.props.formValues.phone_number}
+                coaching={this.props.formValues.coaching}
+              />
             )}
         </div>
         {getConfig().ENABLE_DEMOGRAPHICS_COLLECTION && this.renderDemographicsSection()}
@@ -822,6 +891,7 @@ class AccountSettingsPage extends React.Component {
             <div className="col-md-3">
               <JumpNav
                 displayDemographicsLink={this.props.formValues.shouldDisplayDemographicsSection}
+                displayEducontProfile={this.props.formCustomProfile ? true : false}
               />
             </div>
             <div className="col-md-9">
@@ -872,6 +942,25 @@ AccountSettingsPage.propTypes = {
     useVerifiedNameForCerts: PropTypes.bool.isRequired,
     verified_name: PropTypes.string,
   }).isRequired,
+  formCustomProfile: PropTypes.shape({
+    fullName: PropTypes.string,
+    isActive: PropTypes.bool,
+    email: PropTypes.string,
+    statusConfirmEmail: PropTypes.string,
+    educationalInstitutions: PropTypes.shape({
+      isActual: PropTypes.bool,
+      approvedStatus: PropTypes.string,
+      educationalInstitution: PropTypes.shape({
+        address: PropTypes.string,
+        fullName: PropTypes.string,
+        shortName: PropTypes.string,
+        schoolName: PropTypes.string,
+        locality: PropTypes.string,
+        municipalArea: PropTypes.string,
+      })
+    }),
+    role: PropTypes.string,
+  }),
   committedValues: PropTypes.shape({
     name: PropTypes.string,
     useVerifiedNameForCerts: PropTypes.bool,

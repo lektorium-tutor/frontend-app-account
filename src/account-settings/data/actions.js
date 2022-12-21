@@ -23,6 +23,7 @@ export const fetchSettingsBegin = () => ({
 
 export const fetchSettingsSuccess = ({
   values,
+  customProfile,
   thirdPartyAuthProviders,
   profileDataManager,
   timeZones,
@@ -31,6 +32,7 @@ export const fetchSettingsSuccess = ({
   type: FETCH_SETTINGS.SUCCESS,
   payload: {
     values,
+    customProfile,
     thirdPartyAuthProviders,
     profileDataManager,
     timeZones,

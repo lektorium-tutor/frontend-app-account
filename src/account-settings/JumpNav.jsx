@@ -11,6 +11,7 @@ import messages from './AccountSettingsPage.messages';
 const JumpNav = ({
   intl,
   displayDemographicsLink,
+  displayEducontProfile,
 }) => {
   const stickToTop = useWindowSize().width > breakpoints.small.minWidth;
   return (
@@ -18,6 +19,7 @@ const JumpNav = ({
       <Scrollspy
         items={[
           'basic-information',
+          'profile-educont',
           'profile-information',
           'demographics-information',
           'social-media',
@@ -33,6 +35,13 @@ const JumpNav = ({
             {intl.formatMessage(messages['account.settings.section.account.information'])}
           </NavHashLink>
         </li>
+        {displayEducontProfile && (
+          <li>
+            <NavHashLink to="#profile-educont">
+              Информация профиля Educont
+            </NavHashLink>
+          </li>
+        )}
         <li>
           <NavHashLink to="#profile-information">
             {intl.formatMessage(messages['account.settings.section.profile.information'])}
@@ -40,11 +49,11 @@ const JumpNav = ({
         </li>
         {getConfig().ENABLE_DEMOGRAPHICS_COLLECTION && displayDemographicsLink
           && (
-          <li>
-            <NavHashLink to="#demographics-information">
-              {intl.formatMessage(messages['account.settings.section.demographics.information'])}
-            </NavHashLink>
-          </li>
+            <li>
+              <NavHashLink to="#demographics-information">
+                {intl.formatMessage(messages['account.settings.section.demographics.information'])}
+              </NavHashLink>
+            </li>
           )}
         <li>
           <NavHashLink to="#social-media">
@@ -74,6 +83,7 @@ const JumpNav = ({
 JumpNav.propTypes = {
   intl: intlShape.isRequired,
   displayDemographicsLink: PropTypes.bool.isRequired,
+  displayEducontProfile: PropTypes.bool,
 };
 
 export default injectIntl(JumpNav);

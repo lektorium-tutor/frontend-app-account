@@ -178,19 +178,8 @@ const formValuesSelector = createSelector(
 );
 
 const formCustomProfile = createSelector(
-  valuesSelector,
-  draftsSelector,
-  (values, drafts) => {
-    const formValues = {};
-    Object.entries(values).forEach(([name, value]) => {
-      if (typeof value === 'boolean') {
-        formValues[name] = chooseFormValue(drafts[name], value);
-      } else {
-        formValues[name] = chooseFormValue(drafts[name], value) || '';
-      }
-    });
-    return formValues;
-  },
+  accountSettingsSelector,
+  accountSettings => accountSettings.customProfile,
 );
 
 const transformTimeZonesToOptions = timeZoneArr => timeZoneArr
@@ -273,6 +262,7 @@ export const accountSettingsPageSelector = createSelector(
     countryTimeZoneOptions,
     isActive: activeAccount,
     formValues,
+    formCustomProfile: formCustomProfile,
     committedValues,
     drafts,
     formErrors,

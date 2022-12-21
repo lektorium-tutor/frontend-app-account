@@ -249,8 +249,8 @@ export async function getSettings(username, userRoles, userId) {
 
   return {
     ...account,
-    customProfile,
     ...preferences,
+    customProfile,
     thirdPartyAuthProviders,
     profileDataManager,
     timeZones,

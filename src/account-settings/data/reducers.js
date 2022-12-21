@@ -57,6 +57,7 @@ const reducer = (state = defaultState, action = {}) => {
         ...state,
         values: { ...state.values, ...action.payload.values },
         // Dump the providers into thirdPartyAuth.
+        customProfile: action.payload.customProfile,
         thirdPartyAuth: { ...state.thirdPartyAuth, providers: action.payload.thirdPartyAuthProviders },
         profileDataManager: action.payload.profileDataManager,
         timeZones: action.payload.timeZones,
